@@ -1,11 +1,13 @@
+type MediaType = { isModify: boolean; value: string };
+
 interface MediaQueryObj {
-    orientation: { isModify: boolean; value: string };
-    'min-resolution': { isModify: boolean; value: string };
-    'max-resolution': { isModify: boolean; value: string };
-    'min-width': { isModify: boolean; value: string };
-    'max-width': { isModify: boolean; value: string };
-    'min-height': { isModify: boolean; value: string };
-    'max-height': { isModify: boolean; value: string };
+    orientation: MediaType;
+    'min-resolution': MediaType;
+    'max-resolution': MediaType;
+    'min-width': MediaType;
+    'max-width': MediaType;
+    'min-height': MediaType;
+    'max-height': MediaType;
 }
 
 const mediaQueriesObj: MediaQueryObj = {

@@ -1,16 +1,27 @@
-import { useMediaQuery } from 'bbchut-react-media-query';
 import React, { ReactNode } from 'react';
+import { processMediaQueryString } from '../utils/mediaQueryParser';
+import { useMediaQuery } from 'bbchut-react-media-query';
 
-interface MediaQueryProps {
+type StrOrNum = string | number;
+
+type MediaQueryProps = {
     orientation?: string;
-    minResolution?: string | number;
-    maxResolution?: string | number;
-    minWidth?: string | number;
-    maxWidth?: string | number;
-    minHeight?: string | number;
-    maxHeight?: string | number;
+    minResolution?: StrOrNum;
+    maxResolution?: StrOrNum;
+    minWidth?: StrOrNum;
+    maxWidth?: StrOrNum;
+    minHeight?: StrOrNum;
+    maxHeight?: StrOrNum;
     children?: ((matches: boolean) => ReactNode) | ReactNode;
-}
+} & (
+    | { orientation: string }
+    | { minResolution: StrOrNum }
+    | { maxResolution: StrOrNum }
+    | { minWidth: StrOrNum }
+    | { maxWidth: StrOrNum }
+    | { minHeight: StrOrNum }
+    | { maxHeight: StrOrNum }
+);
 
 interface MediaQueryKeys {
     orientation: string;
@@ -48,7 +59,7 @@ const MediaQuery: React.FC<MediaQueryProps> = props => {
     const { children, ...mediaQueryProps } = props;
 
     const allMatches = useMediaQuery({
-        query: convertToMediaQuery(mediaQueryProps),
+        query: processMediaQueryString(convertToMediaQuery(mediaQueryProps)),
     });
 
     if (typeof children === 'function')
