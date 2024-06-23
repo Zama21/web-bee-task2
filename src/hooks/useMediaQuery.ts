@@ -17,18 +17,16 @@ export const useMediaQuery = ({ query }: MediaQuery): boolean => {
     );
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const mediaQueryList = window.matchMedia(query);
+        const mediaQuery = window.matchMedia(query);
+        setMatches(mediaQuery.matches);
 
-            const updateMatches = (e: MediaQueryListEvent) =>
-                setMatches(e.matches);
+        const updateMatches = (e: MediaQueryListEvent) => setMatches(e.matches);
 
-            mediaQueryList.addEventListener('change', updateMatches);
+        mediaQuery.addEventListener('change', updateMatches);
 
-            return () => {
-                mediaQueryList.removeEventListener('change', updateMatches);
-            };
-        }
+        return () => {
+            mediaQuery.removeEventListener('change', updateMatches);
+        };
     }, [query]);
 
     return matches;

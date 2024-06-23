@@ -10,8 +10,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "bbchut-react-media-query": "^5.1.9",
-        "bbchut-react-use-document": "^1.0.1",
+        "bbchut-react-media-query": "^13.13.13",
+        "bbchut-react-use-document": "^13.0.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
