@@ -2,26 +2,22 @@ import React, { ReactNode } from 'react';
 import { processMediaQueryString } from '../utils/mediaQueryParser';
 import { useMediaQuery } from 'bbchut-react-media-query';
 
-type StrOrNum = string | number;
+type MediaQueryPropType = `${number}px` | number;
 
 type MediaQueryProps = {
-    orientation?: string;
-    minResolution?: StrOrNum;
-    maxResolution?: StrOrNum;
-    minWidth?: StrOrNum;
-    maxWidth?: StrOrNum;
-    minHeight?: StrOrNum;
-    maxHeight?: StrOrNum;
-    children?: ((matches: boolean) => ReactNode) | ReactNode;
-} & (
-    | { orientation: string }
-    | { minResolution: StrOrNum }
-    | { maxResolution: StrOrNum }
-    | { minWidth: StrOrNum }
-    | { maxWidth: StrOrNum }
-    | { minHeight: StrOrNum }
-    | { maxHeight: StrOrNum }
-);
+    orientation: 'landscape' | 'portrait';
+    minResolution: `${number}dppx` | number;
+    maxResolution: `${number}dppx` | number;
+    minWidth: MediaQueryPropType;
+    maxWidth: MediaQueryPropType;
+    minHeight: MediaQueryPropType;
+    maxHeight: MediaQueryPropType;
+};
+type ChldType = { children?: ((matches: boolean) => ReactNode) | ReactNode };
+
+type MediaQueryProps_<
+    U = { [K in keyof MediaQueryProps]: Pick<MediaQueryProps, K> }
+> = Partial<MediaQueryProps> & U[keyof U] & ChldType;
 
 interface MediaQueryKeys {
     orientation: string;
@@ -43,7 +39,7 @@ const mediaQueryKeys: MediaQueryKeys = {
     maxHeight: 'max-height',
 };
 
-function convertToMediaQuery(obj: MediaQueryProps): string {
+function convertToMediaQuery(obj: MediaQueryProps_): string {
     const mediaQueryArray = Object.keys(obj)
         .filter(key => key in mediaQueryKeys)
         .map(
@@ -55,7 +51,7 @@ function convertToMediaQuery(obj: MediaQueryProps): string {
     return mediaQueryArray.join(' and ');
 }
 
-const MediaQuery: React.FC<MediaQueryProps> = props => {
+const MediaQuery: React.FC<MediaQueryProps_> = props => {
     const { children, ...mediaQueryProps } = props;
 
     const allMatches = useMediaQuery({
