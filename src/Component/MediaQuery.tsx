@@ -38,28 +38,27 @@ function getStringMedia(
 }
 
 function convertToMediaQuery(obj: MediaQueryProps): string {
-    const mediaQueryArray = Object.keys(obj)
-        .map(key => {
-            switch (key) {
-                case 'orientation':
-                    return `(orientation: ${obj[key]})`;
-                case 'minResolution':
-                    return getStringMedia('min-resolution', obj[key], 'dppx');
-                case 'maxResolution':
-                    return getStringMedia('max-resolution', obj[key], 'dppx');
-                case 'minWidth':
-                    return getStringMedia('min-width', obj[key], 'px');
-                case 'maxWidth':
-                    return getStringMedia('max-width', obj[key], 'px');
-                case 'minHeight':
-                    return getStringMedia('min-height', obj[key], 'px');
-                case 'maxHeight':
-                    return getStringMedia('max-height', obj[key], 'px');
-                default:
-                    return false;
-            }
-        })
-        .filter(value => value);
+    function convertMediaKey(mediaKey: string): string {
+        return mediaKey.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    }
+    const mediaQueryArray = Object.entries(obj).map(([key, value]) => {
+        const mediaKey = key as unknown as keyof MediaQueryProps;
+        switch (mediaKey) {
+            case 'orientation':
+                return `(${mediaKey}: ${value})`;
+            case 'minResolution':
+            case 'maxResolution':
+                return getStringMedia(convertMediaKey(key), value, 'dppx');
+            case 'minWidth':
+            case 'maxWidth':
+            case 'minHeight':
+            case 'maxHeight':
+                return getStringMedia(convertMediaKey(key), value, 'px');
+            default:
+                const exhaustiveCheck: never = mediaKey;
+                throw new Error(`Assertion failed, value = ${exhaustiveCheck}`);
+        }
+    });
 
     return mediaQueryArray.join(' and ');
 }
